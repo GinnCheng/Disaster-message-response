@@ -34,11 +34,13 @@ def load_data(messages_filepath, categories_filepath):
     return df
 
 def clean_data(df):
-    pass
+    df.drop_duplicates(inplace=True)
 
 
 def save_data(df, database_filename):
-    pass  
+    sql_loc = 'sqlite:///' + database_filename + '.db'
+    engine = create_engine(sql_loc)
+    df.to_sql(database_filename, engine, index=False)
 
 
 def main():
