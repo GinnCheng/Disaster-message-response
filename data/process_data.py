@@ -1,9 +1,37 @@
 import sys
-
+import numpy as np
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+from sqlalchemy import create_engine
+pd.set_option('display.max_columns',20)
 
 def load_data(messages_filepath, categories_filepath):
-    pass
+    messages = pd.read_csv(messages_filepath, index_col='id')
+    categories = pd.read_csv(categories_filepath, index_col='id')
+    # split the categories values
+    categories = categories.categories.str.split(pat=';', expand=True)
+    # select the first row of the categories dataframe
+    row = categories.iloc[0, :]
 
+    # use this row to extract a list of new column names for categories.
+    # one way is to apply a lambda function that takes everything
+    # up to the second to last character of each string with slicing
+    category_colnames = row.apply(lambda x: x.split('-')[0]).values
+
+    # rename the columns of `categories`
+    categories.columns = category_colnames
+    categories.index.name = 'id'
+
+    for column in categories:
+        # set each value to be the last character of the string
+        categories[column] = categories[column].str.split(pat='-', expand=True).iloc[:, -1]
+        # convert column from string to numeric
+        categories[column] = categories[column].astype(int)
+
+    df =messages.merge(categories, on='id')
+
+    return df
 
 def clean_data(df):
     pass
