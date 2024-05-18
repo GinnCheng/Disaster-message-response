@@ -35,6 +35,7 @@ def load_data(messages_filepath, categories_filepath):
 
 def clean_data(df):
     df.drop_duplicates(inplace=True)
+    return df
 
 
 def save_data(df, database_filename):
