@@ -28,7 +28,8 @@ def load_data(messages_filepath, categories_filepath):
         categories[column] = categories[column].str.split(pat='-', expand=True).iloc[:, -1]
         # convert column from string to numeric
         categories[column] = categories[column].astype(int)
-
+    # make sure all values are 0 or 1
+    categories[categories == 2] = 1
     df =messages.merge(categories, on='id')
 
     return df
@@ -41,7 +42,7 @@ def clean_data(df):
 def save_data(df, database_filename):
     sql_loc = 'sqlite:///' + database_filename + '.db'
     engine = create_engine(sql_loc)
-    df.to_sql(database_filename, engine, index=False)
+    df.to_sql(database_filename, engine, index=False, if_exists='replace')
 
 
 def main():
