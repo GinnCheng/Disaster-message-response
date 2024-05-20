@@ -35,3 +35,14 @@ The machine learning pipeline (train_classifier.py) includes:
 - Hyperparameter tuning using GridSearchCV
 - Web Application
 - The Flask web application (run.py) allows users to input a message and get classification results in real-time. It also displays visualizations of the training data.
+
+## Instructions
+### Run ETL Pipeline: This step processes the data.
+> python data/process_data.py data/disaster_messages.csv data/disaster_categories.csv data/sql_database.db
+
+### Run ML Pipeline: This step trains the model.
+> python models/train_classifier.py data/sql_database.db models/disaster_response_model.pkl
+
+### Run the Web App: This step starts the web application.
+> python app/run.py
+> Then go to http://localhost:3001/ (e.g., http://127.0.0.1:3000) in your browser.
