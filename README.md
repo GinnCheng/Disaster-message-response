@@ -1,14 +1,5 @@
 # Disaster Response Pipeline
 
-## Table of Contents
-- [Project Overview](#project-overview)
-- [Installation](#installation)
-- [Instructions](#instructions)
-- [File Descriptions](#file-descriptions)
-- [Pipeline Details](#pipeline-details)
-- [Results](#results)
-- [Acknowledgements](#acknowledgements)
-
 ## Project Overview
 The goal is to build a machine learning pipeline to categorize disaster messages. These messages are sent during disasters to aid organizations and must be classified quickly to ensure that appropriate aid is dispatched.
 
