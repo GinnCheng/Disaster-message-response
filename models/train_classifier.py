@@ -33,20 +33,12 @@ def tokenize(text):
 def build_model():
     from sklearn.feature_extraction.text import HashingVectorizer
     # set the pipeline using HashingVectorizer
-    pipeline = Pipeline([
-        #('vect', CountVectorizer()),
+    model = Pipeline([
         ('hash', HashingVectorizer(n_features=50)),
-        ('clf', MultiOutputClassifier(RandomForestClassifier()))
+        ('clf', MultiOutputClassifier(RandomForestClassifier(n_estimators=10,min_samples_split=2)))
     ])
-    # set the grid search parameters
-    parameters = {
-        'clf__estimator__n_estimators': [5, 10],
-        'clf__estimator__min_samples_split': [2, 4]
-    }
-    # Run GridSearchCV
-    grid_search = GridSearchCV(pipeline, param_grid=parameters, cv=3, verbose=3, n_jobs=-1)
 
-    return grid_search
+    return model
 
 # setup dataframes for predicting 0 and 1 of the message
 def f1_report_frame(category_names, y_test, y_pred):
@@ -60,21 +52,16 @@ def f1_report_frame(category_names, y_test, y_pred):
     return pd.DataFrame(f1_report)
 
 def evaluate_model(model, X_test, y_test, category_names):
-    # Print best parameters
-    print("Best parameters found:")
-    print(model.best_params_)
-
     # Evaluate the model
     y_pred = model.predict(X_test)
-
     # check the f1 score report
     f1_frame = f1_report_frame(category_names, y_test, y_pred)
     f1_frame.T.describe()
 
-
 def save_model(model, model_filepath):
-    pass
-
+    import joblib
+    # Save the model
+    joblib.dump(model, model_filepath)
 
 def main():
     if len(sys.argv) == 3:
