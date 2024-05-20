@@ -1,3 +1,39 @@
+"""
+process_data.py
+
+This script processes disaster response data and stores it in a SQLite database. The data
+is loaded from CSV files, cleaned, and then saved into a database for later use in machine
+learning pipelines.
+
+The script performs the following steps:
+1. Load messages and categories datasets.
+2. Merge the datasets on the 'id' column.
+3. Clean the merged dataset by splitting the categories and converting them into binary values.
+4. Remove duplicates and save the cleaned data into a SQLite database.
+
+Functions:
+-----------
+- load_data(messages_filepath, categories_filepath): Load and merge messages and categories datasets.
+- clean_data(df): Clean the merged dataset.
+- save_data(df, database_filepath): Save the cleaned data into a SQLite database.
+- main(): Main function to run the script.
+
+Parameters:
+-----------
+- messages_filepath (str): Filepath of the messages CSV file.
+- categories_filepath (str): Filepath of the categories CSV file.
+- database_filepath (str): Filepath where the SQLite database will be saved.
+
+Usage:
+------
+To run the script from the command line:
+$ python process_data.py <messages_filepath> <categories_filepath> <database_filepath>
+
+Example:
+--------
+$ python data/process_data.py data/disaster_messages.csv data/disaster_categories.csv data/sql_database.db
+"""
+
 import sys
 import numpy as np
 import pandas as pd
@@ -40,9 +76,9 @@ def clean_data(df):
 
 
 def save_data(df, database_filename):
-    sql_loc = 'sqlite:///' + database_filename + '.db'
+    sql_loc = 'sqlite:///' + database_filename
     engine = create_engine(sql_loc)
-    df.to_sql(database_filename, engine, index=False, if_exists='replace')
+    df.to_sql('sql_database', engine, index=False, if_exists='replace')
 
 
 def main():
