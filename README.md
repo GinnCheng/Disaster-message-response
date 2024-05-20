@@ -26,9 +26,6 @@ To run the project, ensure you have the following packages installed:
 * app/run.py: Script to run the web application.
 * data/disaster_messages.csv: Dataset containing messages.
 * data/disaster_categories.csv: Dataset containing message categories.
-* data/DisasterResponse.db: SQLite database containing cleaned data.
-* models/classifier.pkl: Trained machine learning model.
-* requirements.txt: List of required Python packages.
 
 ## Machine Learning Pipeline
 The machine learning pipeline (train_classifier.py) includes:
