@@ -42,9 +42,12 @@ def index():
     # extract data needed for visuals
     genre_counts = df.groupby('genre').count()['message']
     genre_names = list(genre_counts.index)
+
+    related_percent = df.groupby('genre').sum()['related']/df.groupby('genre').count()['related']*100
     
     # create visuals
     graphs = [
+        # graph 1
         {
             'data': [
                 Bar(
@@ -60,6 +63,26 @@ def index():
                 },
                 'xaxis': {
                     'title': "Genre"
+                }
+            }
+        },
+        # graph 2
+        {
+            'data': [
+                Bar(
+                    x=genre_names,
+                    y=related_percent
+                )
+            ],
+
+            'layout': {
+                'title': 'Percentage of Related Messages',
+                'yaxis': {
+                    'title': "Percentage (%)"
+                },
+                'xaxis': {
+                    'title': "Category",
+                    'tickangle': -45
                 }
             }
         }
