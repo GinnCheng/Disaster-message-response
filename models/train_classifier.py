@@ -44,22 +44,27 @@ def build_model():
     return model
 
 # setup dataframes for predicting 0 and 1 of the message
-def f1_report_frame(category_names, y_test, y_pred):
-    f1_report = {}
-    for i, col in enumerate(category_names):
-        # Generate classification report as dictionary
-        tmp_rpt = classification_report(y_test.iloc[:,i], y_pred[:,i], output_dict=True)
-        # Extract F1-scores for each label
-        f1_scores = {label: metrics['f1-score'] for label, metrics in tmp_rpt.items() if label not in ['accuracy', 'macro avg', 'weighted avg']}
-        f1_report[col] = f1_scores
-    return pd.DataFrame(f1_report)
+def f1_report_frame(category_names, y_test, y_pred, score_name='f1-score'):
+    if score_name in ['f1-score', 'recall', 'precision']:
+        f1_report = {}
+        for i, col in enumerate(category_names):
+            # Generate classification report as dictionary
+            tmp_rpt = classification_report(y_test.iloc[:,i], y_pred[:,i], output_dict=True)
+            # Extract F1-scores for each label
+            f1_scores = {label: metrics[score_name] for label, metrics in tmp_rpt.items() if label not in ['accuracy', 'macro avg', 'weighted avg']}
+            f1_report[col] = f1_scores
+        print('The ' + score_name + ' is:')
+        print(pd.DataFrame(f1_report))
+    else:
+        print("The score name need to be one of the three - 'f1-score','recall', or 'precision'")
 
 def evaluate_model(model, X_test, y_test, category_names):
     # Evaluate the model
     y_pred = model.predict(X_test)
     # check the f1 score report
-    f1_frame = f1_report_frame(category_names, y_test, y_pred)
-    f1_frame.T.describe()
+    f1_report_frame(category_names, y_test, y_pred)
+    f1_report_frame(category_names, y_test, y_pred, score_name='recall')
+    f1_report_frame(category_names, y_test, y_pred, score_name='precision')
 
 def save_model(model, model_filepath):
     import joblib
