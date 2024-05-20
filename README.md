@@ -1,7 +1,5 @@
 # Disaster Response Pipeline
 
-# Disaster Response Pipeline Project
-
 ## Table of Contents
 - [Project Overview](#project-overview)
 - [Installation](#installation)
