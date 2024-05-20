@@ -2,14 +2,14 @@ import sys
 from sqlalchemy import create_engine
 import pandas as pd
 from sklearn.model_selection import train_test_split
-import numpy as np
+from nltk.stem import WordNetLemmatizer
+import re
 from nltk.tokenize import word_tokenize
 from sklearn.pipeline import Pipeline
-from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
+from sklearn.feature_extraction.text import TfidfVectorizer, TfidfTransformer
 from sklearn.multioutput import MultiOutputClassifier
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import classification_report
-from sklearn.model_selection import GridSearchCV, StratifiedKFold
 import warnings
 warnings.filterwarnings('ignore')
 
@@ -23,19 +23,22 @@ def load_data(database_filepath):
     return X, y, y.columns
 
 def tokenize(text):
-    from nltk.corpus import stopwords
-    import string
-    text = text.lower().translate(str.maketrans('', '', string.punctuation))
+    # Remove punctuation and non-alphanumeric characters
+    text = re.sub(r'[^a-zA-Z0-9\s]', '', text.lower())
+    text = re.sub(r'\b\w{1,2}\b', '', text)  # Remove words with 1 or 2 characters
     tokenized_text = word_tokenize(text)
-    tokenized_text = [wd for wd in tokenized_text if wd not in stopwords.words('english')]
+    # Lemmatization
+    lemmatizer = WordNetLemmatizer()
+    tokenized_text = [lemmatizer.lemmatize(token) for token in tokenized_text]
     return tokenized_text
 
 def build_model():
     from sklearn.feature_extraction.text import HashingVectorizer
     # set the pipeline using HashingVectorizer
     model = Pipeline([
-        ('hash', HashingVectorizer(n_features=50)),
-        ('clf', MultiOutputClassifier(RandomForestClassifier(n_estimators=10,min_samples_split=2)))
+        ('vect', TfidfVectorizer(tokenizer=tokenize, max_df=0.75)),
+        ('tfidf', TfidfTransformer()),
+        ('clf', MultiOutputClassifier(RandomForestClassifier(n_estimators=30, min_samples_split=2)))
     ])
 
     return model
